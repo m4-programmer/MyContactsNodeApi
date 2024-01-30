@@ -5,8 +5,30 @@ const { success, failure } = require('../utils/Helper');
 // get all contacts
 const get = async (req, res) => {
     try {
-        const contacts = await Contact.find({ user_id: req.user._id });
-        return res.status(200).json(success('Contacts fetched successfully', contacts, 200));
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10; // Adjust the default limit as needed
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
+        const totalContacts = await Contact.countDocuments({ user_id: req.user._id });
+        const totalPages = Math.ceil(totalContacts / limit);
+
+        const contacts = await Contact.find({ user_id: req.user._id })
+            .skip(startIndex)
+            .limit(limit);
+
+        const result = {
+            contacts,
+            pageInfo: {
+                page,
+                totalPages,
+                totalContacts,
+                hasMore: endIndex < totalContacts,
+            },
+        };
+
+        return res.status(200).json(success('Contacts fetched successfully', result, 200));
     } catch (error) {
         return res.status(500).json(failure('Something went wrong', error, 500));
     }
