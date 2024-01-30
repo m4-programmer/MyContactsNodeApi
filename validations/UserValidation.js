@@ -15,4 +15,8 @@ const registerValidation = [
     body('password').isLength({min: 5}).withMessage("Password must be at least 5 characters long").isString(),
 ]
 
-module.exports = {registerValidation}
+const loginValidation = [
+    body('email').notEmpty().withMessage("Email is required"),
+    body('password').isLength({min: 5}).withMessage("Password must be at least 5 characters long").isString(),
+]
+module.exports = {registerValidation, loginValidation}
