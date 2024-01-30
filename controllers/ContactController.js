@@ -69,7 +69,7 @@ const destroy = async (req, res) => {
 //get single contact that belongs to a user
 const show = async (req, res) => {
     try {
-        const contact = await findOne({_id: req.params.id, user_id: req.user._id});
+        const contact = await Contact.findOne({_id: req.params.id, user_id: req.user._id});
         if (!contact) {
             return res.status(404).json(failure('Contact not found', [], 404));
         }
