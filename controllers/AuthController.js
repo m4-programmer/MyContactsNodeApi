@@ -79,7 +79,6 @@ const update = async (req, res) => {
     //we check validation
     if (!name || !email) {
         return res.status(422).json(failure('name and email is required', [], 422));
-        
     }
     try {
         //we update user record
