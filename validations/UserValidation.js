@@ -11,7 +11,7 @@ const isEmailUnique = async (email) => {
 }
 const registerValidation = [
     body('name').notEmpty().withMessage("Name is required"),
-    body('email').notEmpty().withMessage("Email is required").custom(isEmailUnique),
+    body('email').notEmpty().withMessage("Email is required").custom(isEmailUnique).withMessage("Email already exists"),
     body('password').isLength({min: 5}).withMessage("Password must be at least 5 characters long").isString(),
 ]
 
