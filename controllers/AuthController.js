@@ -42,9 +42,6 @@ const login = async (req, res) => {
         return res.status(422).json(failure('Validation failed', errors.array(), 422));
     }
     try {
-        //hash password
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(password, salt);
 
         const user = await User.getByEmail(email, true);
         
@@ -94,7 +91,28 @@ const update = async (req, res) => {
 
 //change password
 const changePassword = async(req, res) => {
+    //validate req
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    const {password, oldPassword} = req.body;
+    
+    const salt = bcrypt.genSaltSync(10);
+    hashNewPassword =  bcrypt.hashSync(password, salt);
+    
+    try {
+        const user = await User.getByEmail(req.user.email, true);
+        if (!bcrypt.compareSync(oldPassword, user.password)) {
+            return res.status(400).json(failure('Old password is incorrect', [], 400));
+        }
 
+        const updatedUser = await User.update(user._id,user.name, user.email, hashNewPassword);
+        return res.status(200).json(success('User password updated successfully', updatedUser , 200));
+    } catch (error) {
+        console.log("Change Password Error", error);
+        return res.status(500).json(failure('Something went wrong', error, 500));
+    }
 }
 
 //logout user
