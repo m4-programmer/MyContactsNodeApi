@@ -71,8 +71,36 @@ const get = async (req, res) => {
 
 
 //update user detail
+const update = async (req, res) => {
+    //we get the user id from the auth user
+    const user = req.user;
+    // we get the user body request
+    const {name, email} = req.body
+    //we check validation
+    if (!name || !email) {
+        return res.status(422).json(failure('name and email is required', [], 422));
+        
+    }
+    try {
+        //we update user record
+        const updatedUser = await User.update(user._id, name, email);
+        return res.status(200).json(success('User details updated successfully', updatedUser, 200));
+    } catch (error) {   
+        //we return response
+        return res.status(500).json(failure('Something went wrong', error, 500));
+    }
 
+    
+}
+
+//change password
+const changePassword = async(req, res) => {
+
+}
 
 //logout user
+const logout = async(req, res) => {
 
-module.exports = {register, login, get}
+}
+
+module.exports = {register, login, get, update, changePassword, logout}
