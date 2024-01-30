@@ -1,4 +1,4 @@
-const {body} = require('express-validator')
+const {body, check} = require('express-validator')
 const User = require('../models/User')
 
 const isEmailUnique = async (email) => {
@@ -19,4 +19,20 @@ const loginValidation = [
     body('email').notEmpty().withMessage("Email is required"),
     body('password').isLength({min: 5}).withMessage("Password must be at least 5 characters long").isString(),
 ]
-module.exports = {registerValidation, loginValidation}
+
+const changePasswordValidation = [
+    check('oldPassword').notEmpty().withMessage('Old password is required'),
+    check('password')
+      .notEmpty().withMessage('New password is required')
+      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+    check('password_confirmation')
+      .notEmpty().withMessage('Password confirmation is required')
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error('Password confirmation does not match password');
+        }
+        return true;
+      }),
+  ];
+
+module.exports = {registerValidation, loginValidation, changePasswordValidation}
