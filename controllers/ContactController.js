@@ -54,7 +54,16 @@ const update = async (req, res) => {
 
 //delete contact
 const destroy = async (req, res) => {
-    
+    try {
+        const contact = await Contact.findOne({_id: req.params.id, user_id: req.user._id});
+        if (!contact) {
+            return res.status(404).json(failure('Contact not found', [], 404));
+        } 
+        contact.delete();
+        return res.status(200).json(success('Contact deleted successfully', [], 204));
+    } catch (error) {
+        return res.status(500).json(failure('Something went wrong', error, 500));
+    }
 }
 
 //get single contact that belongs to a user
