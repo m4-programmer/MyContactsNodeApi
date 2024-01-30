@@ -54,7 +54,7 @@ const login = async (req, res) => {
         }
         
         //generate token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2m' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
         //return response
         return res.status(200).json(success('User logged in successfully', { token }, 200));
     } catch (error) {
@@ -64,7 +64,10 @@ const login = async (req, res) => {
 
 
 //get user details/profile
-
+const get = async (req, res) => {
+    const user = req.user
+    return res.status(200).json(success('User details retrieved successfully', user, 200));
+}
 
 
 //update user detail
@@ -72,4 +75,4 @@ const login = async (req, res) => {
 
 //logout user
 
-module.exports = {register, login}
+module.exports = {register, login, get}
