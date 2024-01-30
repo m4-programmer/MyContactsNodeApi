@@ -9,6 +9,6 @@ const app = express();
 
 app.use(express.json());
 
-route.use('api/v1', route);
+app.use('/api/v1', route);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
