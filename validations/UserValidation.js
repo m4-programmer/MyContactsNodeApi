@@ -4,7 +4,7 @@ const User = require('../models/User')
 const isEmailUnique = async (email) => {
     console.log(email);
     const user = await User.getByEmail(email);
-    if (!user) {
+    if (user) {
         throw new Error('Email already exists');
     }
     return true;
