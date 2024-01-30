@@ -13,6 +13,10 @@ const contactSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String,
+        required: false
+    },
     user_id: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
